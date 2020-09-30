@@ -35,3 +35,7 @@ Route::get('/admin/newbook',function(){
 Route::post('/admin/newbook','admin@newbook');
 
 Route::get('/user/{name}/{password}', 'User@index')->where(['name' => '[a-zA-Z]+']);
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
