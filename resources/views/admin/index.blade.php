@@ -35,13 +35,15 @@
         <th>Tác giả</th>
         <th>Thể loại</th>
         <th>Mô tả</th>
+        <th>Bìa sách</th>
     </tr>
     <tr>
-        <form method="POST" action="admin/newbook">
+        <form method="POST" action="admin/newbook" enctype="multipart/form-data">
         <td><input type="text" name="book_name"></td>
         <td><input type="text" name="author"></td>
         <td><input type="text" name="book_category"></td>
         <td><input type="text" name="description"></td>
+        <td><input type="file" name='img'></td>
         @csrf
         <td> <button type="submit" name="new">Thêm sách mới</button><td>
         </form>

@@ -16,14 +16,36 @@ class admin extends Controller
         return view('admin.index')->withBooks($books);
     }
     //hàm tạo sách mới đã lưu
-    public function newbook(Request $req){
+    public function newbook(Request $req){   
         $book = new Books();
         $book->book_name=$req->input('book_name');
         $book->author=$req->input('author');
         $book->description=$req->input('description');
         $book->book_category=$req->input('book_category');
+        $this->addimg($req);
         $book->save();
         return Redirect('/admin');
+    }
+
+    //hàm thêm ảnh
+public function addimg(Request $req){
+            if($req->file('img')->isValid()){
+                //lấy đuôi
+                $exten=$req->file('img')->guessClientExtension();
+                if($exten !='jpef' || $exten !='jpg'||$exten != 'gif'||$exten !='png'){
+                    
+                }
+                else{
+                //Lưu file vào thư mục
+                $path=$req->file('img')->store('public/bookimg');
+                // lấy tên file
+                    $name=$req->file('img')->hashName();
+                //lấy url 
+                    $url='storage/bookimg/'.$name;
+                    }
+                    return $url;
+                }   
+
     }
     //hàm đi đến trang chỉnh sửa
     public function edit($id){
@@ -47,13 +69,14 @@ class admin extends Controller
         }
         return back();
     }
+ 
     public function newchap(Request $req){
         //Lấy file
         if($req->hasFile('mp3')) {
             //lấy đuôi
                 $exten=$req->file('mp3')->guessClientExtension();
                 if($exten !='mp3'){
-                    echo 'Định dạng file không đúng, không thể upload!';
+                    $req->session()->flash('alert-fileerror','file phải có định dạng là mp3');
                     }
                 else {
                 //Lưu file vào thư mục
@@ -62,14 +85,16 @@ class admin extends Controller
                     $name=$req->file('mp3')->hashName();
                 //lấy url 
                     $url='storage/chapaudio/'.$name;
+
+                    $chap = new Chapter();
+                    $chap->bookID =$req->bookID;
+                    $chap->title=$req->title;
+                    $chap->url=$url;
+                    $chap->filename=$name;
+                    $chap->save();
                 }
             }
-        $chap = new Chapter();
-        $chap->bookID =$req->bookID;
-        $chap->title=$req->title;
-        $chap->url=$url;
-        $chap->filename=$name;
-        $chap->save();
+       
         return back();
     }
     public function deletechap(Request $req){
@@ -80,7 +105,7 @@ class admin extends Controller
         return back();
     }
     public function deletebook(Request $req){
-        $deletechaps=Chapter::where('bookID',$req->id)->get();
+        $deletechaps=Chapter::where('bookID',$req->id)->get();  
             foreach ($deletechaps as $file){
                 $file->delete();
         Storage::delete('public/chapaudio/'.$file->filename);

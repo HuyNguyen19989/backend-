@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\Books;
+use App\Models\Chapter;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,8 +25,12 @@ Route::get('/checkDB',function(){
     die();
 });
 Route::get('/books',function(){
-    return Books::all();
+    return ['books'=>Books::all()];
 });
-Route::get('/books/{id}',function(){
-    return Books::where('id',$id)->get();
+//url là link động nên cần ghép domain vào trước url để lấy link nha :)
+Route::get('/books/{id}',function($id){
+    return ['book'=>Books::where('id',$id)->get(),
+            'chapters'=>$chapter =Chapter::where('bookID',$id)->get(),
+            'domain'=>asset(""),
+];        
 });

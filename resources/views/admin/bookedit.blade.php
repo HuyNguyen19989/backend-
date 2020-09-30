@@ -47,6 +47,14 @@
        <?php }?>
 </table>
 <h3>Thêm chương mới</h3>
+{{--Phần hiện thông báo  --}}
+@foreach (['fileerror', 'success', 'info'] as $msg)
+@if(Session::has('alert-' . $msg))
+
+<p class="alert alert-{{ $msg }}" style="color:red";>{{ Session::get('alert-' . $msg) }} </p>
+@endif
+@endforeach     
+<p>
 <form action="newchap" method="POST" enctype="multipart/form-data">
     <input type="hidden" value='<?php echo $book->id?>' name="bookID">
     Tên chương mới :<input type="text" name="title">
