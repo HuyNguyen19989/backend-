@@ -25,12 +25,14 @@ Route::get('/checkDB',function(){
     die();
 });
 Route::get('/books',function(){
-    return ['books'=>Books::all()];
+    return ['books'=>Books::all(),
+            'domain'=>asset(""),
+        ];
 });
 //url là link động nên cần ghép domain vào trước url để lấy link nha :)
 Route::get('/books/{id}',function($id){
     return ['book'=>Books::where('id',$id)->get(),
-            'chapters'=>$chapter =Chapter::where('bookID',$id)->get(),
+            'chapters'=>Chapter::where('bookID',$id)->get(),
             'domain'=>asset(""),
 ];        
 });

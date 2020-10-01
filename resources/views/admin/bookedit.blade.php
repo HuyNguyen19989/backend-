@@ -48,7 +48,7 @@
 </table>
 <h3>Thêm chương mới</h3>
 {{--Phần hiện thông báo  --}}
-@foreach (['fileerror', 'success', 'info'] as $msg)
+@foreach (['fileerror', 'success', 'img'] as $msg)
 @if(Session::has('alert-' . $msg))
 
 <p class="alert alert-{{ $msg }}" style="color:red";>{{ Session::get('alert-' . $msg) }} </p>

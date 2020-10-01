@@ -29,6 +29,12 @@
 <?php } ?>
 </table>
 <p>Thêm sách mới
+    @foreach (['format', 'error','img'] as $msg)
+@if(Session::has('alert-' . $msg))
+
+<p class="alert alert-{{ $msg }}" style="color:red";>{{ Session::get('alert-' . $msg) }} </p>
+@endif
+@endforeach  
 <table>
     <tr>
         <th>Tên sách</th>

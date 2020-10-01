@@ -16,24 +16,36 @@ class admin extends Controller
         return view('admin.index')->withBooks($books);
     }
     //hàm tạo sách mới đã lưu
-    public function newbook(Request $req){   
+    public function newbook(Request $req){  
+        if(!$req->book_name or !$req->author or !$req->book_category or !$req->description ){
+            $req->session()->flash('alert-error','Vui lòng điền đầy đủ nội dung');
+        }
+        elseif(!$req->file('img')){
+            $req->session()->flash('alert-img','Chưa tải ảnh bìa');
+        }
+        elseif($this->addimg($req)==false){
+            $req->session()->flash('alert-format','Định dạng ảnh phải là  jpeg, jpg,png,gif');
+        }
+        
+        else{
         $book = new Books();
         $book->book_name=$req->input('book_name');
         $book->author=$req->input('author');
         $book->description=$req->input('description');
         $book->book_category=$req->input('book_category');
-        $this->addimg($req);
+        $book->img=$this->addimg($req);
         $book->save();
-        return Redirect('/admin');
+        }
+        return back();
     }
 
     //hàm thêm ảnh
 public function addimg(Request $req){
-            if($req->file('img')->isValid()){
+            if($req->hasFile('img')){
                 //lấy đuôi
                 $exten=$req->file('img')->guessClientExtension();
-                if($exten !='jpef' || $exten !='jpg'||$exten != 'gif'||$exten !='png'){
-                    
+                if($exten !='jpef' and $exten !='jpg' and $exten and 'gif' and $exten !='png'){ 
+                    return false;
                 }
                 else{
                 //Lưu file vào thư mục
@@ -42,8 +54,9 @@ public function addimg(Request $req){
                     $name=$req->file('img')->hashName();
                 //lấy url 
                     $url='storage/bookimg/'.$name;
-                    }
                     return $url;
+                    }
+                    
                 }   
 
     }
@@ -76,7 +89,7 @@ public function addimg(Request $req){
             //lấy đuôi
                 $exten=$req->file('mp3')->guessClientExtension();
                 if($exten !='mp3'){
-                    $req->session()->flash('alert-fileerror','file phải có định dạng là mp3');
+                    $req->session()->flash('alert-fileerror','Sai định dạng');
                     }
                 else {
                 //Lưu file vào thư mục
@@ -105,12 +118,16 @@ public function addimg(Request $req){
         return back();
     }
     public function deletebook(Request $req){
-        $deletechaps=Chapter::where('bookID',$req->id)->get();  
+        $deletechaps=Chapter::where('bookID',$req->id)->get();
+
             foreach ($deletechaps as $file){
                 $file->delete();
         Storage::delete('public/chapaudio/'.$file->filename);
         }
-        $book=Books::where('id',$req->id)->delete();
+        
+        $book=Books::where('id',$req->id)->first();
+        // Storage::delete('storage/bookimg/XBYXFw1bwfnu2VnJfXvWQxcspqcwYY3Oh9q64WMH.png');  
+        $book->delete();
         return back();
     }
    

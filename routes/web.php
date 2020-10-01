@@ -29,6 +29,7 @@ Route::post('/admin/edit/{id}','admin@edit')->where('id', '[0-9]+');
 Route::post('/admin/edit/info','admin@editinfo');
 Route::post('/admin/edit/newchap','admin@newchap');
 Route::post('/admin/edit/delete', 'admin@deletechap');
+
 Route::get('/admin/newbook',function(){
     return Redirect()->route('adminindex');
 });
