@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
+use Validator;
 class admin extends Controller
 {
     public function index(){
@@ -84,6 +85,7 @@ public function addimg(Request $req){
     }
  
     public function newchap(Request $req){
+        
         //Lấy file
         if($req->hasFile('mp3')) {
             //lấy đuôi

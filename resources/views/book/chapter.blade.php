@@ -9,7 +9,7 @@ echo $chapter->title;
     <audio controls>
         <source src="<?php echo asset($chapter->url); ?>" type="audio/mpeg">
       </audio>
-  <p>    
+  <p>     
 <?php if($prev){ ?>
   <a href= <?php echo "./".$prev->id  ?>>Chương trước</a>
 <?php }?>      
